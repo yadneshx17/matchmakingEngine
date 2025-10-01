@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.utils.redis_manager import r
-import uuid, time
+import uuid, time, json
 
 router = APIRouter()
 
@@ -21,10 +21,25 @@ async def join_queue(player_name: str, player_skill: int):
         "status": "queued"
     })
 
-    message = {
-        "message": "You have been queued",
-        "player_id": playerId
-    }
+    # add player to matchmaking queue
+    await r.zadd("queue", {playerId: player_skill})
 
-    print(message)
-    return message
+    # auto-expire player after 5 min to avoid stale entries
+    await r.expire(f"player:{playerId}", 600)
+
+    # Publish event to notify matchmaking worker
+    await r.publish("matchmaking-events", json.dumps({
+        "event": "player_queued",
+        "name": player_name,
+        "playerId": playerId,
+        "skill": player_skill,
+        "status": "queued"
+    }))
+
+    return {
+        "message": "You have been queued",
+        "player_id": playerId,
+        "player_name": player_name,
+        "player_skill": player_skill,
+        "status": "queued"
+    }
