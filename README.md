@@ -3,6 +3,16 @@
 This is a **MVP** of a real-time matchmaking engine built with **FastAPI + Redis + Socket.IO**.  
 It handles **player queueing, matchmaking, notifications, and pub/sub events**. The whole flow works end-to-end, and clients get notified when a match is found.  
 
+## Architecture
+<img width="963" height="603" alt="image" src="https://github.com/user-attachments/assets/5107e059-50f3-42b0-aed4-559cf541b62a" />
+
+**Flow:**
+1. Player joins queue → stored in Redis  
+2. Matchmaking worker Loops through Queue  
+3. Worker forms matches and publishes `"match_found"` events  
+4. Notification service emits WebSocket events to connected clients  
+5. Clients instantly see that a match is found
+
 ## ✅ What's Done
 - Player service
 - Core matchmaking worker  
