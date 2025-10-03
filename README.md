@@ -1,6 +1,6 @@
 # Real-Time Matchmaking Engine (MVP)
 
-This is a **minimum viable product (MVP)** of a real-time matchmaking engine built with **FastAPI + Redis + Socket.IO**.  
+This is a **MVP** of a real-time matchmaking engine built with **FastAPI + Redis + Socket.IO**.  
 It handles **player queueing, matchmaking, notifications, and pub/sub events**. The whole flow works end-to-end, and clients get notified when a match is found.  
 
 ## ✅ What's 
