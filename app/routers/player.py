@@ -24,7 +24,7 @@ async def join_queue(player_name: str, player_skill: int):
     # add player to matchmaking queue
     await r.zadd("queue", {playerId: player_skill})
 
-    # auto-expire player after 5 min to avoid stale entries
+    # auto expire player after 5 min to avoid stale entries
     await r.expire(f"player:{playerId}", 600)
 
     # Publish event to notify matchmaking worker
