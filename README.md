@@ -3,7 +3,7 @@
 This is a **MVP** of a real-time matchmaking engine built with **FastAPI + Redis + Socket.IO**.  
 It handles **player queueing, matchmaking, notifications, and pub/sub events**. The whole flow works end-to-end, and clients get notified when a match is found.  
 
-## ✅ What's 
+## ✅ What's Done
 - Player service
 - Core matchmaking worker  
 - Redis pub/sub for events  
@@ -29,6 +29,5 @@ Right now it’s just a simple MVP, but it gives a solid foundation to expand an
 
 
 ## 📝 Note
-Yeah, I wrote all the comments myself — **not AI slop** 😎  
-
+Yeah, I wrote all the comments myself - **not AI slop**
 ---
