@@ -7,7 +7,7 @@ import requests
 
 # Config
 load_dotenv()
-SERVER_URL = os.getenv("SERVER_URL", "http://localhost:5000")
+SERVER_URL = os.getenv("WS_SERVER_URL", "http://localhost:5000")
 
 # socket client instance
 sio = socketio.AsyncClient()

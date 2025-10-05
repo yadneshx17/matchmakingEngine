@@ -3,6 +3,44 @@
 This is a **MVP** of a real-time matchmaking engine built with **FastAPI + Redis + Socket.IO**.  
 It handles **player queueing, matchmaking, notifications, and pub/sub events**. The whole flow works end-to-end, and clients get notified when a match is found.  
 
+
+## 🧰 Run Locally
+
+Clone the repo:
+
+```bash
+$ git clone https://github.com/yadneshx17/matchmakingEngine.git
+$ cd matchmakingEngine
+```
+
+Install dependencies:
+
+```bash
+$ pip install -r requirements.txt
+```
+
+Run the server:
+
+```bash
+$ uvicorn app.main:socket_app --port 8000 --reload
+```
+**  Make sure Redis is running**
+
+Using Docker (recommended):
+```bash
+$ docker run -d --name redis -p 6379:6379 redis
+```
+*Redis must be running before starting the app — the backend depends on it.*
+
+
+## 🧪 Test It
+
+Open another terminal and run the Socket.IO client:
+
+```py
+$ python client.py    
+```
+
 ## ✅ What's 
 - Player service
 - Core matchmaking worker  
