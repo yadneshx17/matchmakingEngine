@@ -1,6 +1,51 @@
-.env
-.env/
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pyproj
+__pycache__/
+*.pyc
 
-./venv
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
 venv/
-/venv/
+.env/
+env/
+.venv/
+ENV/
+env.bak/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and local files
+*.log
+*.sqlite3
+*.db
+*.pid
+
+# Redis dump / celery / cache
+dump.rdb
+celerybeat-schedule
+__cache__/
+
+# FastAPI / Uvicorn auto-reload files
+*.coverage
+.coverage
+htmlcov/
