@@ -1,13 +1,12 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 import socketio
 import asyncio
 from app.socket.socket_manager import sio
-from app.routers import player
+from .routers import player
 from .worker.matchmaker import matchmaking_worker
 from .notification.notifications import notification
-from contextlib import asynccontextmanager
-from fastapi.middleware.cors import CORSMiddleware
-
 
 # run background worker on startup
 async def lifespan(app: FastAPI):
@@ -29,7 +28,7 @@ app = FastAPI(lifespan=lifespan)
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
 # Include Routers
-app.include_router(player.router, prefix="/api/v1", tags=["players"])
+app.include_router(player.router, prefix="/api/v2", tags=["players"])
 
 # CORS
 app.add_middleware (
