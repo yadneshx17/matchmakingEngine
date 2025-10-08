@@ -31,7 +31,7 @@ async def join_queue(gameMode: str, player_data: Player):
             creationTime=time.time(),
             status="searching"
         )
-        print(f"Ticket: {ticket}")
+        # print(f"Ticket: {ticket}")
     
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid ticket data: {e}")
@@ -51,6 +51,6 @@ async def join_queue(gameMode: str, player_data: Player):
         "gameMode": gameMode
     }))
     
-    print(f"INFO: Ticket [ {ticketId} ] for mode '{gameMode}' queued for {len(ticket.players)} player(s).")
+    # print(f"INFO: Ticket [ {ticketId} ] for mode '{gameMode}' queued for {len(ticket.players)} player(s).")
     
     return {"message": "Ticket created and successfully queued", "ticket": ticket.model_dump()}
