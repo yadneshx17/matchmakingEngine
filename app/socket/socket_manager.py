@@ -8,7 +8,7 @@ ALLOWED_ORIGINS = ["*"]
 # socket instance 
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins=ALLOWED_ORIGINS)
 
-# Import events to register them with the sio instance
+# Import events, to register them with the sio instance
 
 @sio.event
 async def connect(sid, environ, auth):

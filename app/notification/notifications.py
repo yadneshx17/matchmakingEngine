@@ -19,8 +19,11 @@ async def notification():
                 player_ids = data.get("players", [])  
                 match_id = data.get("match_id")
 
-                print(f"Match found - {match_id} - for players: {player_ids}")
-
+                print(f"""
+TEAMS:  Team 1 - {data.get('teams').get('team_1')}\n
+       Team 2 - {data.get('teams').get('team_2')} 
+""")
+                # print(f"{match_id} - for players: {player_ids}")
                 for pid in player_ids:
                     # print(f"PID: {pid}")
 
