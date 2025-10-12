@@ -135,6 +135,24 @@ The system automatically expands skill tolerance over time to ensure matches are
 
 ---
 
+## System Architecture
+
+```
+matchmaking_engine/
+└─ app/
+   ├─ main.py                  # FastAPI server entry point
+   ├─ models/                  # Pydantic models (e.g., Ticket, Player)
+   ├─ notifications/           # Notification services
+   ├─ routers/                 # API route definitions
+   │  └─ player.py             # Player service & dashboard endpoints
+   ├─ sockets/                 # Socket.IO management
+   ├─ utils/                   # Utility/helper modules
+   │  └─ redis_manager.py      # Redis connection & helpers
+   └─ workers/                 # Background matchmaking logic
+```
+
+---
+
 ## 🎯 Why This Exists
 This project was built to explore the internals of scalable, **real-time matchmaking systems**, the of kind used in multiplayer games or skill-based pairing apps.
 It demonstrates clean architecture, decoupled components, and real-time visualization for debugging and experimentation.
