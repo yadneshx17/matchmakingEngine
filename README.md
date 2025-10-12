@@ -150,7 +150,6 @@ matchmaking_engine/
    │  └─ redis_manager.py      # Redis connection & helpers
    └─ workers/                 # Background matchmaking logic
 ```
-
 ---
 
 ## 🎯 Why This Exists
