@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.utils.redis_manager import r
 import uuid, time, json
 from app.models.ticket import Player, MatchmakingTicket
-from typing import Dict
+from typing import Dict, List
 
 router = APIRouter()
 
@@ -81,3 +81,74 @@ async def join_queue(gameMode: str, player_data: Player):
         except:
             pass  # Ignore cleanup errors
         raise HTTPException(status_code=500, detail=f"Failed to queue player: {e}")
+
+# API endpoints for frontend data
+@router.get("/game_modes")
+async def get_game_modes():
+    """Get available game modes from backend configuration"""
+    try:
+        with open("gameModes.json", 'r') as f:
+            game_modes = json.load(f)
+        return {"game_modes": game_modes}
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Game modes configuration not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load game modes: {e}")
+
+@router.get("/pool_status")
+async def get_pool_status():
+    """Get current pool status for all game modes"""
+    try:
+        with open("gameModes.json", 'r') as f:
+            game_modes = json.load(f)
+        
+        pool_status = {}
+        for mode in game_modes.keys():
+            pool_key = f"pool:{mode}"
+            queue_size = await r.zcard(pool_key)
+            pool_status[mode] = {
+                "queue_size": queue_size,
+                "players_in_queue": queue_size
+            }
+        
+        return {"pool_status": pool_status}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get pool status: {e}")
+
+@router.get("/system_status")
+async def get_system_status():
+    try:
+        # Get basic system info
+        system_info = {
+            "status": "online",
+            "uptime": "running",
+            "total_matches": 0,  # This could be tracked in Redis
+            "active_queues": 0
+        }
+        
+        # Count active queues
+        with open("gameModes.json", 'r') as f:
+            game_modes = json.load(f)
+        
+        active_queues = 0
+        for mode in game_modes.keys():
+            pool_key = f"pool:{mode}"
+            if await r.zcard(pool_key) > 0:
+                active_queues += 1
+        
+        system_info["active_queues"] = active_queues
+        
+        return {"system": system_info}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get system status: {e}")
+
+@router.get("/recent_matches")
+async def get_recent_matches():
+    """Get recent match events for the dashboard"""
+    try:
+        # Get recent matches from Redis (stored by the worker)
+        # For now, we'll return empty matches since the worker doesn't store them yet
+        # In a real implementation, matches would be stored in Redis with timestamps
+        return {"matches": []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get recent matches: {e}")
