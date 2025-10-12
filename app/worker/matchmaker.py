@@ -13,7 +13,8 @@ except FileNotFoundError:
 
 # Main Worker Loading
 async def matchmaking_worker():
-    print("******************************* Matchmaking worker started ********************************")
+    print("(==>) MATCHMAKING WORKER: Starting engine...")
+    print(f"[=] LOADED GAME MODES: {list(game_rules.keys())}")
     
     while True:
         try: 
@@ -22,7 +23,7 @@ async def matchmaking_worker():
                 await process_queue_for_mode(mode, rules)
         except Exception as e:
             # This top-level error handling ensures the worker never crashes.
-            print(f"CRITICAL ERROR in worker loop: {e}. Recovering...")
+            print(f"[X] CRITICAL ERROR in worker loop: {e}. Recovering...")
         
         await asyncio.sleep(2) # Run a full matchmaking cycle every 2 seconds.
 
@@ -72,7 +73,7 @@ async def process_queue_for_mode(mode: str, rules: dict):
     if best_region:
         # 7. Finalize the match: Atomically remove all players from the pool.
         matched_ticket_ids = [ticket.ticket for ticket in match_proposal]
-        print(f"Match is Found for [{matched_ticket_ids}]")
+        print(f"[*] MATCH FOUND: {mode} | Tickets: {matched_ticket_ids}")
         await r.zrem(pool_key, *matched_ticket_ids)
 
         # 8. Publish events for notifications and the dashboard
@@ -80,6 +81,7 @@ async def process_queue_for_mode(mode: str, rules: dict):
     else:
         # The latency check failed, This group can't play together
         # Put ALL tickets (including the anchor) back into the queue.
+        print(f"[X] LATENCY CHECK FAILED: {mode} | Requeuing {len(match_proposal)} tickets")
         tickets_to_requeue = {}
         for ticket in match_proposal:
             ticket_average_skill = sum(p.skill for p in ticket.players) / len(ticket.players)
@@ -189,10 +191,10 @@ def select_best_region(proposal: List[MatchmakingTicket], viable_regions: List[s
     
     # Return region with highest score
     best_region = max(region_scores.items(), key=lambda x: x[1])[0]
-    print(f"Region selection for {len(proposal)} tickets:")
+    print(f">>> REGION SELECTION :: {len(proposal)} tickets")
     for region, score in sorted(region_scores.items(), key=lambda x: x[1], reverse=True):
-        print(f"  {region}: {score}")
-    print(f"  -> Selected: {best_region}")
+        print(f"   {region}: {score}")
+    print(f"   ✓ Selected: {best_region}")
     return best_region
 
 def get_dynamic_skill_tolerance(wait_time: float, rules: dict) -> float:
@@ -209,7 +211,7 @@ async def get_ticket_by_id(ticketId: str):
             return None
         return MatchmakingTicket.model_validate_json(ticket_json)
     except Exception as e:
-        print(f"Error getting ticket {ticketId}: {e}")
+        print(f"[X] ERROR getting ticket {ticketId}: {e}")
         return None
 
 async def get_tickets_by_ids(ticketIds: List[str]) -> List[MatchmakingTicket]:
@@ -224,23 +226,44 @@ async def get_tickets_by_ids(ticketIds: List[str]) -> List[MatchmakingTicket]:
             if ticket_json:
                 tickets.append(MatchmakingTicket.model_validate_json(ticket_json))
         except Exception as e:
-            print(f"Error getting ticket {tid}: {e}")
+            print(f"[X] ERROR getting ticket {tid}: {e}")
             continue
     return tickets
 
 async def publish_match_found_events(mode: str, ticket_ids: List[str], teams: Dict, region: str):
     """Publishes events to the required Redis Pub/Sub channels."""
     match_id = str(uuid.uuid4())
-    log_message = f"Match '{match_id}' created for '{mode}' on region '{region}'."
-    print(f"$> SUCCESS: {log_message}")
+    timestamp = time.time()
+    
+    # Clean, structured log message
+    log_message = f"MATCH FOUND: {match_id} | Mode: {mode} | Region: {region} | Players: {len(ticket_ids)}"
+    print(f"✓ MATCH: {log_message}")
 
     # Event for the NOTIFICATION service (to players)
-    await r.publish("match_found", json.dumps({
-        "event": "match_found", "matchId": match_id,
-        "gameMode": mode, "region": region,
-        "teams": teams
-    }))
+    match_found_event = {
+        "event": "match_found", 
+        "matchId": match_id,
+        "gameMode": mode, 
+        "region": region,
+        "teams": teams,
+        "timestamp": timestamp,
+        "ticketIds": ticket_ids
+    }
+    await r.publish("match_found", json.dumps(match_found_event))
 
     # Events for the DASHBOARD
-    await r.publish("dashboard_events", json.dumps({"event": "log", "message": log_message}))
-    await r.publish("dashboard_events", json.dumps({"event": "pool_updated", "gameMode": mode}))
+    dashboard_log_event = {
+        "event": "log", 
+        "message": log_message,
+        "timestamp": timestamp,
+        "level": "info"
+    }
+    await r.publish("dashboard_events", json.dumps(dashboard_log_event))
+    
+    pool_updated_event = {
+        "event": "pool_updated", 
+        "gameMode": mode,
+        "timestamp": timestamp,
+        "action": "match_created"
+    }
+    await r.publish("dashboard_events", json.dumps(pool_updated_event))

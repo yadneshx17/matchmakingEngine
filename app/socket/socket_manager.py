@@ -17,8 +17,7 @@ async def connect(sid, environ, auth):
         print(f'Player {player_id} connected with SID {sid}')
         await r.hset("user_sids", player_id, sid) # Store mapping ( playerId -> sid )
     else:
-        print(f'Anonymous client connected: {sid}. Disconnecting.')
-        await sio.disconnect(sid)
+        print(f'Dashboard client connected: {sid}')
 
 @sio.event
 async def disconnect(sid):

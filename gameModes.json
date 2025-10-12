@@ -33,5 +33,16 @@
             { "afterSeconds": 30, "newTolerance": 200 },
             { "afterSeconds": 60, "newTolerance": 400 }
         ]
+    },
+    "5v5_arena": {
+        "description": "A team-based 3v3 battle.",
+        "teamSize": 5,
+        "numTeams": 2,
+        "minQueueSizeForMatch": 10,
+        "skillTolerance": 100,
+        "expandSearchSteps": [
+            { "afterSeconds": 30, "newTolerance": 200 },
+            { "afterSeconds": 60, "newTolerance": 400 }
+        ]
     }
 }
