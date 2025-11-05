@@ -49,9 +49,3 @@ __cache__/
 *.coverage
 .coverage
 htmlcov/
-
-# Custom
-.trial.py
-./trial.py
-trial.py
-./trial.py/

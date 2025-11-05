@@ -7,22 +7,19 @@ from app.socket.socket_manager import sio
 from .routers import player
 from .worker.matchmaker import matchmaking_worker
 from .notification.notifications import notification
-from .notification.dashboardnotify import dashboardNotify
 
 # run background worker on startup
 async def lifespan(app: FastAPI):
     task = asyncio.create_task(matchmaking_worker())
     notify_task = asyncio.create_task(notification())
-    dashboard = asyncio.create_task(dashboardNotify())
-    print("----------------------------------- MatchEngine started -----------------------------------")
+    print("Matchmaking worker startedddddd")
 
     yield  # <-- App runs while this is paused
 
     # Shutdown
     task.cancel()
     notify_task.cancel()
-    dashboard.cancel()
-    print("----------------------------------- MatchEngine stopped -----------------------------------")
+    print("Matchmaking worker stopped")
 
 # FastAPI App
 app = FastAPI(lifespan=lifespan)
