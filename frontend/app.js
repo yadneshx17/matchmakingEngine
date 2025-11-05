@@ -544,7 +544,39 @@ class TerminalMatchmakingEngine {
     }
 }
 
+// ASCII Art Banner
+function displayBanner() {
+    const banner = `
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                                                              ║
+    ║    ███╗   ███╗ █████╗ ████████╗ ██████╗██╗  ██╗███╗   ███╗   ║
+    ║    ████╗ ████║██╔══██╗╚══██╔══╝██╔════╝██║  ██║████╗ ████║   ║
+    ║    ██╔████╔██║███████║   ██║   ██║     ███████║██╔████╔██║   ║
+    ║    ██║╚██╔╝██║██╔══██║   ██║   ██║     ██╔══██║██║╚██╔╝██║   ║
+    ║    ██║ ╚═╝ ██║██║  ██║   ██║   ╚██████╗██║  ██║██║ ╚═╝ ██║   ║
+    ║    ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝   ║
+    ║                                                              ║
+    ║                    ENGINE v2.1.3 - TERMINAL                  ║
+    ║                                                              ║
+    ╚══════════════════════════════════════════════════════════════╝
+    `;
+    
+    console.log(banner);
+}
+
+// Initialize the terminal interface
 document.addEventListener('DOMContentLoaded', () => {
+    displayBanner();
+    
+    // Add some initial system messages
+    setTimeout(() => {
+        console.log('> TERMINAL INTERFACE LOADED');
+        console.log('> READY FOR COMMANDS');
+        console.log('> USE CTRL+1-4 TO SIMULATE PLAYERS');
+        console.log('> USE CTRL+R TO RUN MATCH');
+        console.log('> USE CTRL+C TO CLEAR POOL');
+    }, 1000);
+    
     // Initialize the engine
     const engine = new TerminalMatchmakingEngine();
     console.log('TerminalMatchmakingEngine initialized:', engine);

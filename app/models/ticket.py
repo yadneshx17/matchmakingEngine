@@ -7,7 +7,7 @@ class Player(BaseModel):
     skill: int
     regionPreference: List[Dict[str, int]]
 
-class Matchmaking(BaseModel):
+class MatchmakingTicket(BaseModel):
     ticket: str
     players: List[Player]
     gameMode: str
