@@ -1,0 +1,48 @@
+{
+    "1v1_duel" :{
+        "description": "A classic 1v1 fight to the finish.",
+        "teamSize": 1,
+        "numTeams": 2,
+        "minQueueSizeForMatch": 2,
+        "skillTolerance": 75,
+        "expandSearchSteps": [
+            { "afterSeconds": 20, "newTolerance":150 },
+            { "afterSeconds": 40, "newTolerance":30 }   
+        ]
+    },
+    
+    "2v2_clash": {
+        "description": "A team-based 2v2 Clash.",
+        "teamSize": 2,
+        "numTeams": 2,
+        "minQueueSizeForMatch": 4,
+        "skillTolerance": 100,
+        "expandSearchSteps": [
+            { "afterSeconds": 30, "newTolerance": 200 },
+            { "afterSeconds": 60, "newTolerance": 400 }
+        ]
+    },
+    
+    "3v3_arena": {
+        "description": "A team-based 3v3 battle.",
+        "teamSize": 3,
+        "numTeams": 2,
+        "minQueueSizeForMatch": 6,
+        "skillTolerance": 100,
+        "expandSearchSteps": [
+            { "afterSeconds": 30, "newTolerance": 200 },
+            { "afterSeconds": 60, "newTolerance": 400 }
+        ]
+    },
+    "5v5_arena": {
+        "description": "A team-based 3v3 battle.",
+        "teamSize": 5,
+        "numTeams": 2,
+        "minQueueSizeForMatch": 10,
+        "skillTolerance": 100,
+        "expandSearchSteps": [
+            { "afterSeconds": 30, "newTolerance": 200 },
+            { "afterSeconds": 60, "newTolerance": 400 }
+        ]
+    }
+}

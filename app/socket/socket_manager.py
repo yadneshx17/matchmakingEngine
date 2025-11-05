@@ -8,7 +8,7 @@ ALLOWED_ORIGINS = ["*"]
 # socket instance 
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins=ALLOWED_ORIGINS)
 
-# Import events to register them with the sio instance
+# Import events, to register them with the sio instance
 
 @sio.event
 async def connect(sid, environ, auth):
@@ -17,8 +17,7 @@ async def connect(sid, environ, auth):
         print(f'Player {player_id} connected with SID {sid}')
         await r.hset("user_sids", player_id, sid) # Store mapping ( playerId -> sid )
     else:
-        print(f'Anonymous client connected: {sid}. Disconnecting.')
-        await sio.disconnect(sid)
+        print(f'Dashboard client connected: {sid}')
 
 @sio.event
 async def disconnect(sid):
